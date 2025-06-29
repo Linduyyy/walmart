@@ -64,4 +64,11 @@ group by 1
 order by 2 desc
 ```
 
-### Q4
+### Q5: Determine the average, minimum, and maximum rating of categories for each city
+```sql
+select category, city, avg(rating), min(rating), max(rating)
+from walmart
+group by 1, 2
+order by 3,4,5 desc
+```
+### Q6: Calculate the total profit for each category
