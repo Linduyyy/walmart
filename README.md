@@ -72,3 +72,43 @@ group by 1, 2
 order by 3,4,5 desc
 ```
 ### Q6: Calculate the total profit for each category
+```sql
+SELECT 
+    category,
+    SUM(unit_price * quantity * profit_margin) AS total_profit
+FROM walmart
+GROUP BY category
+ORDER BY total_profit DESC;
+```
+
+### Q7: Determine the most common payment method for each branch
+```sql
+with cte as
+(
+select branch, payment_method, count(*) as no_transaction,
+rank() over (partition by branch order by count(*) desc) as ranked
+from walmart
+group by branch, payment_method
+)
+select branch, payment_method, no_transaction
+from cte
+where ranked=1
+```
+
+### Q8: Categorize sales into Morning, Afternoon, and Evening shifts (coba lagi)
+```sql
+SELECT
+    branch,
+    CASE 
+        WHEN HOUR(TIME(time)) < 12 THEN 'Morning'
+        WHEN HOUR(TIME(time)) BETWEEN 12 AND 17 THEN 'Afternoon'
+        ELSE 'Evening'
+    END AS shift,
+    COUNT(*) AS num_invoices
+FROM walmart
+GROUP BY branch, shift
+ORDER BY branch, num_invoices DESC;
+```
+
+### Q9: Identify the 5 branches with the highest revenue decrease ratio from last year to current year (e.g., 2022 to 2023)
+
